@@ -460,8 +460,6 @@ std::pair<int,int> SplayTree<T>::Print(SplayNode<T> *now, int block_size)
         help_right = now->right->x;
     }
 
-    int all = left.second - left.first+ right.second  - right.first;
-
 
     now->x = (help_left + help_right) / 2;
     if(now->left == nullptr){

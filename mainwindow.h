@@ -4,7 +4,7 @@
 #include <QMainWindow>
 #include<QGraphicsScene>
 
-#include "AVL.h"
+#include "AVL.cpp"
 #include "Treap.cpp"
 #include "RedBlack.cpp"
 #include "SplayTree.cpp"
@@ -38,11 +38,11 @@ private:
     QGraphicsView *view;
 
     void Print();
-    void PrintAVL(AVLNode* t,int x_prev,int y_prev);
-    void PrintTreap(TreapNode<int>* t,int x_prev,int y_prev);
-    void PrintRedBlack(RedBlackNode<int>* t,int x_prev,int y_prev);
-    void PrintSplayTree(SplayNode<int>* t,int x_prev,int y_prev);
-    void PrintBTree(BNode<int>* t,int x_prev,int y_prev);
+    void PrintAVL(AVLNode<long long>* t,int x_prev,int y_prev);
+    void PrintTreap(TreapNode<long long>* t,int x_prev,int y_prev);
+    void PrintRedBlack(RedBlackNode<long long>* t,int x_prev,int y_prev);
+    void PrintSplayTree(SplayNode<long long>* t,int x_prev,int y_prev);
+    void PrintBTree(BNode<long long>* t,int x_prev,int y_prev);
 private slots:
     void ZoomPlus();
     void ZoomMinus();

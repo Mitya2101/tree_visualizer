@@ -227,12 +227,10 @@ RedBlackNode<T> *RedBlack<T>::Find(int cur)
     RedBlackNode<T> *now = root;
     while (now != nullptr)
     {
-        // std::cout << now->num << ' ' << cur << std::endl;
         if (now->num == cur)
         {
             return now;
         }
-        //  std::cout << "djf" << std::endl;
         if (now->num < cur)
         {
             now = now->right;
@@ -241,7 +239,6 @@ RedBlackNode<T> *RedBlack<T>::Find(int cur)
         {
             now = now->left;
         }
-        // std::cout << (now == nullptr) << std::endl;
     }
     return now;
 }
@@ -258,7 +255,6 @@ void RedBlack<T>::Insert(int cur)
     RedBlackNode<T> *now = root;
     while (now != nullptr)
     {
-        // std::cout << now->num << "djf" << std::endl;
         if (now->num == cur)
         {
             return;
@@ -333,9 +329,7 @@ void RedBlack<T>::BalanceInsert(RedBlackNode<T> *now)
     {
         if (GetParent(now)->right == now)
         {
-            // std::cout << "djf " << GetParent(now)->num << std::endl;
             SmallLeft(GetParent(now));
-            // Print(root);
             GetParent(now)->is_red = 0;
             GetBrother(now)->is_red = 1;
         }
@@ -352,23 +346,21 @@ void RedBlack<T>::BalanceInsert(RedBlackNode<T> *now)
 }
 
 template <typename T>
-std::pair<int,int> RedBlack<T>::Print(RedBlackNode<T> *now,int block_size)
+int RedBlack<T>::Print(RedBlackNode<T> *now,int block_size)
 {
     if (now == nullptr) {
-        return std::make_pair(0,0);
+        return 0;
     }
 
     auto left = Print(now->left,block_size);
     auto right = Print(now->right,block_size);
     if(now->right != nullptr){
         if(now->left != nullptr){
-            now->right->x += left.second + 7;
-            right.second += left.second + 7;
-            left.second += left.second + 7;
+            now->right->x += left + 7;
+            right += left + 7;
         }else{
-            now->right->x += left.second + 15;
-            right.second += left.second + 15;
-            left.second += left.second + 15;
+            now->right->x += left + 15;
+            right += left + 15;
         }
     }
     int help_left = 0;
@@ -379,11 +371,7 @@ std::pair<int,int> RedBlack<T>::Print(RedBlackNode<T> *now,int block_size)
     if(now->right != nullptr){
         help_right = now->right->x;
     }
-
-    int all = left.second - left.first+ right.second  - right.first;
-
-
-    now->x = left.first + (help_left + help_right) / 2;
+    now->x = (help_left + help_right) / 2;
 
     int max = 1e9;
     if(now->left != nullptr){
@@ -399,8 +387,6 @@ std::pair<int,int> RedBlack<T>::Print(RedBlackNode<T> *now,int block_size)
 
     if(now->left == nullptr && now->right == nullptr){
         now->y = 0;
-    }else if(now->left != nullptr){
-        now->y = max - 50;
     }else{
         now->y = max - 50;
     }
@@ -413,7 +399,7 @@ std::pair<int,int> RedBlack<T>::Print(RedBlackNode<T> *now,int block_size)
         }
     }
 
-    std::pair<int,int> ans;
+    int ans;
 
     if(now->left != nullptr){
         now->left->y = max;
@@ -425,17 +411,11 @@ std::pair<int,int> RedBlack<T>::Print(RedBlackNode<T> *now,int block_size)
         now->right->x = now->right->x - now->x;
         now->right->y = now->right->y - now->y;
     }
-    if(now->left == nullptr){
-        left.first = 1e9;
-    }
 
 
-    ans.first = 0;
-    ans.second = std::max(now->x + block_size,right.second);
+    ans = std::max(now->x + block_size,right);
 
-    if(ans.first == 0 && ans.second == 0){
-        ans.second = block_size;
-    }
+
 
 
     return ans;
@@ -477,7 +457,6 @@ void RedBlack<T>::DeleteCliffRight(RedBlackNode<T> *now)
         root = now->right;
         return;
     }
-    // std::cout << "djfg" << std::endl;
     RedBlackNode<T> *tmp = now->parent;
     RedBlackNode<T> *tmp1 = now->right;
     Gap(now->right);
@@ -800,7 +779,6 @@ void RedBlack<T>::Erase(int cur)
             else
             {
                 RedBlackNode<T> *help = FindMinValue(now->right);
-                // std::cout << "aaaaa " << now->num << ' ' << help->num << std::endl;
                 std::swap(help->num, now->num);
                 SolveCliffRight(help);
             }

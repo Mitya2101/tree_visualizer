@@ -15,7 +15,7 @@
 #include<QShortcut>
 #include<string>
 #include<QString>
-#include<iostream>
+
 
 int last = 0;
 const int Update = 30;
@@ -26,16 +26,16 @@ int block_size_y = 20;
 const int start_x = 0;
 const int start_y = 0;
 const double scale_factor = 1.1;
-AVL avl;
-Treap<int> treap;
-RedBlack<int> red_black;
-SplayTree<int> splay;
-BTree<int> btree;
+AVL<long long> avl;
+Treap<long long> treap;
+RedBlack<long long> red_black;
+SplayTree<long long> splay;
+BTree<long long> btree;
 
 
 std::mt19937_64 rng(69);
 
-void EraseFromTree(int x){
+void EraseFromTree(long long x){
     avl.Erase(x);
     treap.Erase(x);
     red_black.Erase(x);
@@ -49,7 +49,7 @@ void EraseFromTree(int x){
     }
 }
 
-void InsertToTree(int x){
+void InsertToTree(long long x){
     avl.Insert(x);
     treap.Insert(x);
     red_black.Insert(x);
@@ -71,6 +71,9 @@ MainWindow::MainWindow(QWidget *parent)
         blocks_size.push_back(7 * (i + 2));
     }
 
+    view->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
+    view->setResizeAnchor(QGraphicsView::AnchorUnderMouse);
+
 
     QTimer* timer = new QTimer(this);
     connect(timer,&QTimer::timeout,this,&MainWindow::Print);
@@ -85,7 +88,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 
      QPalette palette = view->palette();
-     palette.setColor(QPalette::Base, QColor(20, 20, 50)); // Темно-серый фон
+     palette.setColor(QPalette::Base, QColor(20, 20, 50));
      view->setPalette(palette);
      view->setAutoFillBackground(true);
 
@@ -113,7 +116,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(TreapButton,&QPushButton::clicked,this,&MainWindow::TreapButtonClicked);
 
     QLineEdit *Insert = new QLineEdit(this);
-    Insert->setValidator(new QIntValidator(0, 1e9, this));
+    Insert->setValidator(new QIntValidator(-1e9, 1e9, this));
     Insert->setGeometry(480,0,80,50);
 
     QPushButton* InsertOne = new QPushButton("Add",this);
@@ -134,7 +137,8 @@ MainWindow::MainWindow(QWidget *parent)
         bool ok;
         int intValue = InsertMany->text().toInt(&ok);
         while(intValue > 0){
-            int tmp = rng() % 100000;
+            long long tmp = rng() % (long long)1e9;
+            tmp -= (int)(1e9) / 2LL;
             InsertToTree(tmp);
             intValue--;
         }
@@ -152,14 +156,14 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
         if (item && item->type() == QGraphicsTextItem::Type) {
             QGraphicsTextItem* textItem = qgraphicsitem_cast<QGraphicsTextItem*>(item);
 
-            EraseFromTree(std::stoi((textItem->toPlainText()).toStdString()));
+            EraseFromTree(std::stoll((textItem->toPlainText()).toStdString()));
         }else if(item && item->type() == QGraphicsRectItem::Type){
             QGraphicsRectItem* RectItem = qgraphicsitem_cast<QGraphicsRectItem*>(item);
             QPointF help_pos = QPointF(RectItem->rect().x(),RectItem->rect().y());
-            QGraphicsItem *item1 = scene->itemAt(help_pos, QTransform());
-            if(item1 && item1->type() == QGraphicsTextItem::Type){
-                QGraphicsTextItem* textItem = qgraphicsitem_cast<QGraphicsTextItem*>(item1);
-                EraseFromTree(std::stoi((textItem->toPlainText()).toStdString()));
+            QGraphicsItem *item_text = scene->itemAt(help_pos, QTransform());
+            if(item_text && item_text->type() == QGraphicsTextItem::Type){
+                QGraphicsTextItem* textItem = qgraphicsitem_cast<QGraphicsTextItem*>(item_text);
+                EraseFromTree(std::stoll((textItem->toPlainText()).toStdString()));
             }
         }
         return true;
@@ -204,11 +208,10 @@ void MainWindow::TreapButtonClicked(){
     last = 4;
 }
 
-void MainWindow::PrintAVL(AVLNode* t,int x_prev,int y_prev){
+void MainWindow::PrintAVL(AVLNode<long long>* t,int x_prev,int y_prev){
     if(t == nullptr)return;
     QGraphicsRectItem *rect = scene->addRect(x_prev + t->x,y_prev + t->y, block_size_x, block_size_y);
     rect->setBrush(Qt::white);
-    std::string ty = std::to_string(t->num);
     QGraphicsTextItem *text = scene->addText(QString::fromStdString(std::to_string(t->num)));
     QRectF textRect = text->boundingRect();
     text->setPos(
@@ -223,11 +226,10 @@ void MainWindow::PrintAVL(AVLNode* t,int x_prev,int y_prev){
     PrintAVL(t->right,x_prev + t->x,y_prev + t->y);
 }
 
-void MainWindow::PrintTreap(TreapNode<int>* t,int x_prev,int y_prev){
+void MainWindow::PrintTreap(TreapNode<long long>* t,int x_prev,int y_prev){
     if(t == nullptr)return;
     QGraphicsRectItem *rect = scene->addRect(x_prev + t->x,y_prev + t->y, block_size_x, block_size_y);
     rect->setBrush(Qt::white);
-    std::string ty = std::to_string(t->num);
     QGraphicsTextItem *text = scene->addText(QString::fromStdString(std::to_string(t->num)));
     QRectF textRect = text->boundingRect();
     text->setPos(
@@ -242,7 +244,7 @@ void MainWindow::PrintTreap(TreapNode<int>* t,int x_prev,int y_prev){
     PrintTreap(t->right,x_prev + t->x,y_prev + t->y);
 }
 
-void MainWindow::PrintRedBlack(RedBlackNode<int>* t,int x_prev,int y_prev){
+void MainWindow::PrintRedBlack(RedBlackNode<long long>* t,int x_prev,int y_prev){
     if(t == nullptr)return;
     QGraphicsRectItem *rect = scene->addRect(x_prev + t->x,y_prev + t->y, block_size_x, block_size_y);
     if(t->is_red){
@@ -250,7 +252,6 @@ void MainWindow::PrintRedBlack(RedBlackNode<int>* t,int x_prev,int y_prev){
     }else{
         rect->setBrush(Qt::black);
     }
-    std::string ty = std::to_string(t->num);
     QGraphicsTextItem *text = scene->addText(QString::fromStdString(std::to_string(t->num)));
     QRectF textRect = text->boundingRect();
     text->setPos(
@@ -265,11 +266,10 @@ void MainWindow::PrintRedBlack(RedBlackNode<int>* t,int x_prev,int y_prev){
     PrintRedBlack(t->right,x_prev + t->x,y_prev + t->y);
 }
 
-void MainWindow::PrintSplayTree(SplayNode<int>* t,int x_prev,int y_prev){
+void MainWindow::PrintSplayTree(SplayNode<long long>* t,int x_prev,int y_prev){
     if(t == nullptr)return;
     QGraphicsRectItem *rect = scene->addRect(x_prev + t->x,y_prev + t->y, block_size_x, block_size_y);
     rect->setBrush(Qt::white);
-    std::string ty = std::to_string(t->num);
     QGraphicsTextItem *text = scene->addText(QString::fromStdString(std::to_string(t->num)));
     QRectF textRect = text->boundingRect();
     text->setPos(
@@ -284,21 +284,21 @@ void MainWindow::PrintSplayTree(SplayNode<int>* t,int x_prev,int y_prev){
     PrintSplayTree(t->right,x_prev + t->x,y_prev + t->y);
 }
 
-void MainWindow::PrintBTree(BNode<int>* t,int x_prev,int y_prev){
+void MainWindow::PrintBTree(BNode<long long>* t,int x_prev,int y_prev){
     if(t == nullptr){
         return;
     }
     int start_x = t->coor_x[0] + x_prev;
     int stop_x = t->coor_x.back() + x_prev + block_size_x;
-    int help_x = 0;
-    int help_y = 0;
+    int where_parent_x = 0;
+    int where_parent_y = 0;
     for(int i = 0;i < t->parent->childs.size();i++){
         if(t->parent->childs[i] == t){
-            help_x = x_prev + i * block_size_x;
-            help_y = y_prev + block_size_y;
+            where_parent_x = x_prev + i * block_size_x;
+            where_parent_y = y_prev + block_size_y;
         }
     }
-    QGraphicsLineItem* line = scene->addLine((start_x + stop_x) / 2,t->coor_y[0] + y_prev,help_x,help_y);
+    QGraphicsLineItem* line = scene->addLine((start_x + stop_x) / 2,t->coor_y[0] + y_prev,where_parent_x,where_parent_y);
     line->setPen(QPen(Qt::red, 2));
 
     for(int i = 0;i < t->num.size();i++){

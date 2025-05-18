@@ -68,8 +68,6 @@ void BNode<T>::Delete(BNode<T> *&root)
             }
         }
     }
-    // std::cout << "bbbbbbbbbbbbb" << std ::endl;
-
     this->parent = nullptr;
 
     for (int i = 0; i < this->childs.size(); i++)
@@ -83,7 +81,6 @@ void BNode<T>::Delete(BNode<T> *&root)
         }
         this->childs[i] = nullptr;
     }
-    // std::cout << "bbbbbbbbbbbbb" << std ::endl;
 
     if (this == root)
     {
@@ -626,7 +623,6 @@ void BTree<T>::EraseFirstStep(T cur)
         }
 
         now = now->childs[ind + 1];
-        // std::cout << "aaaaa" << std::endl;
     }
 }
 

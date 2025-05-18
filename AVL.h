@@ -4,8 +4,10 @@
 #define UTILITY_INCLUDED
 #include<utility>
 #endif
+template<typename T>
 class AVL;
 
+template<typename T>
 class AVLNode {
 public:
     AVLNode* parent;
@@ -16,15 +18,18 @@ public:
     int x;
     int y;
 
-    friend class AVL;
+    friend class AVL<T>;
 
-    friend void SmallLeft(AVLNode* now);
-    friend void SmallRight(AVLNode* now);
-    friend void BigLeft(AVLNode* now);
-    friend void BigRight(AVLNode* now);
-    friend void Balance(AVLNode* now);
-    friend AVLNode* FindMinValue(AVLNode* now);
-    friend AVLNode* FindMaxValue(AVLNode* now);
+
+
+    template<typename T1>
+    friend void Balance(AVLNode<T1>* now);
+
+    template<typename T1>
+    friend AVLNode<T1>* FindMinValue(AVLNode<T1>* now);
+
+    template<typename T1>
+    friend AVLNode<T1>* FindMaxValue(AVLNode<T1>* now);
 
     AVLNode(AVLNode* parent, AVLNode* left, AVLNode* right, int height)
         : parent(parent), left(left), right(right), height(height) {};
@@ -42,34 +47,44 @@ public:
     void Clear();
     ~AVLNode() = default;
 
-    friend int GetHeight(AVLNode* now);
-    friend void UpdateHeight(AVLNode* now);
+    template<typename T1>
+    friend int GetHeight(AVLNode<T1>* now);
+
+    template<typename T1>
+    friend void UpdateHeight(AVLNode<T1>* now);
 };
 
+
+template<typename T>
 class AVL {
 public:
-    AVLNode* root = nullptr;
-    void SmallLeft(AVLNode* now);
-    void SmallRight(AVLNode* now);
-    void BigLeft(AVLNode* now);
-    void BigRight(AVLNode* now);
-    void Balance(AVLNode* now);
-    friend AVLNode* FindMinValue(AVLNode* now);
-    friend AVLNode* FindMaxValue(AVLNode* now);
-    void SolveLeftRight(AVLNode* now);
-    void SolveRightLeft(AVLNode* now);
-    void SolveLeftLeft(AVLNode* now);
-    void SolveRightRight(AVLNode* now);
-    void SolveLeft(AVLNode* now);
-    void SolveRight(AVLNode* now);
+    AVLNode<T>* root = nullptr;
+    void SmallLeft(AVLNode<T>* now);
+    void SmallRight(AVLNode<T>* now);
+    void BigLeft(AVLNode<T>* now);
+    void BigRight(AVLNode<T>* now);
+    void Balance(AVLNode<T>* now);
+
+    template<typename T1>
+    friend AVLNode<T1>* FindMinValue(AVLNode<T1>* now);
+
+    template<typename T1>
+    friend AVLNode<T1>* FindMaxValue(AVLNode<T1>* now);
+
+    void SolveLeftRight(AVLNode<T>* now);
+    void SolveRightLeft(AVLNode<T>* now);
+    void SolveLeftLeft(AVLNode<T>* now);
+    void SolveRightRight(AVLNode<T>* now);
+    void SolveLeft(AVLNode<T>* now);
+    void SolveRight(AVLNode<T>* now);
 
     AVL() = default;
 
-    AVLNode* Find(int cur);
-    void Insert(int cur);
-    void Erase(int cur);
-    std::pair<int,int> Print(AVLNode* now,int block_size);
-    void CheckInv(AVLNode* now);
+    AVLNode<T>* Find(T cur);
+    void Insert(T cur);
+    void Erase(T cur);
+    int Print(AVLNode<T>* now,int block_size);
+    int CheckInv(AVLNode<T>* now);
 };
 
 #endif // AVL_H

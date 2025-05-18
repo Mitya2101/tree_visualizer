@@ -69,7 +69,7 @@ public:
 
     void Insert(int cur);
     RedBlackNode<T>* Find(int cur);
-    std::pair<int,int> Print(RedBlackNode<T>* now,int block_size);
+    int Print(RedBlackNode<T>* now,int block_size);
     void Erase(int cur);
     int Check();
 
