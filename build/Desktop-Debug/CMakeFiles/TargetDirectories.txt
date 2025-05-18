@@ -1,9 +1,0 @@
-/Users/mityaz/Tree1/build/Desktop-Debug/CMakeFiles/Tree1.dir
-/Users/mityaz/Tree1/build/Desktop-Debug/CMakeFiles/edit_cache.dir
-/Users/mityaz/Tree1/build/Desktop-Debug/CMakeFiles/rebuild_cache.dir
-/Users/mityaz/Tree1/build/Desktop-Debug/CMakeFiles/list_install_components.dir
-/Users/mityaz/Tree1/build/Desktop-Debug/CMakeFiles/install.dir
-/Users/mityaz/Tree1/build/Desktop-Debug/CMakeFiles/install/local.dir
-/Users/mityaz/Tree1/build/Desktop-Debug/CMakeFiles/install/strip.dir
-/Users/mityaz/Tree1/build/Desktop-Debug/CMakeFiles/Tree1_autogen_timestamp_deps.dir
-/Users/mityaz/Tree1/build/Desktop-Debug/CMakeFiles/Tree1_autogen.dir
